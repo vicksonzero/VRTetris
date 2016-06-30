@@ -14,6 +14,7 @@ public class BTetrisGame : MonoBehaviour {
 
     public float tickInterval = 1;
 
+    [HideInInspector]
     public BTetrisTransform movingPiece;
 
     private TetrisField field;

@@ -7,10 +7,12 @@ public class BTetriminoBuilder : MonoBehaviour
 
     const bool _1 = true;
     const bool _0 = false;
-    public bool debug = false;
     public BTetrisTransform cubePrefab;
     public BTetrisTransform basePrefab;
     public Transform tetriminoGroup;
+    public Transform debugGroup;
+
+    private Transform nextGroup;
 
     static SortedDictionary<string, BrickConfig> tetriminoConfigsByName;
     public static BrickConfig[] tetriminoConfigs = new BrickConfig[]
@@ -86,17 +88,25 @@ public class BTetriminoBuilder : MonoBehaviour
 
     void Start()
     {
-        if (this.debug)
+        int startX = -1 * tetriminoConfigs.Length / 2 * 5;
+        for (int i = 0; i < tetriminoConfigs.Length; i++)
         {
-            int startX = -1 * tetriminoConfigs.Length / 2 * 5;
-            for (int i = 0; i < tetriminoConfigs.Length; i++)
-            {
-                var config = tetriminoConfigs[i];
-                var newTetrimino = createBrick(config, this.basePrefab, this.cubePrefab, new Vector3(startX + 5 * i, 0f, 0));
+            var config = tetriminoConfigs[i];
+            var newTetrimino = this.asDebug().createBrick(config, this.basePrefab, this.cubePrefab, new Vector3(startX + 5 * i, 0f, 0));
 
-            }
         }
-        
+        this.nextGroup = this.tetriminoGroup;
+    }
+
+    public BTetriminoBuilder asDebug()
+    {
+        return this.toGroup(debugGroup);
+    }
+
+    public BTetriminoBuilder toGroup(Transform gp)
+    {
+        this.nextGroup = gp;
+        return this;
     }
 
     /// <summary>
@@ -133,8 +143,10 @@ public class BTetriminoBuilder : MonoBehaviour
             }
         }
         result.name = "Tetrimino " + config.name;
-        result.transform.SetParent(tetriminoGroup, false);
+        result.transform.SetParent(this.nextGroup, false);
         result.position = startPos;
+
+        this.nextGroup = this.tetriminoGroup;
         return result;
     }
 
