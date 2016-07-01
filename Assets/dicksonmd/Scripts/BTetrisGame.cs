@@ -23,7 +23,8 @@ public class BTetrisGame : MonoBehaviour {
 
     void Awake()
     {
-        field = new TetrisField(width, depth, height);
+        var _constants = BGameConstants.getInstance();
+        field = new TetrisField(_constants.width, _constants.depth, _constants.height);
         field.tetrisGrid = tetrisGrid;
     }
 
@@ -108,7 +109,8 @@ public class BTetrisGame : MonoBehaviour {
 
     public virtual BTetrisTransform getNextBrick()
     {
-        return builder.createRandomBrick(new Vector3(width / 2, height, depth / 2));
+        var _constants = BGameConstants.getInstance();
+        return builder.createRandomBrick(new Vector3(_constants.width / 2, _constants.height, _constants.depth / 2));
     }
 
     public void tryMoveMovingPiece(Vector3 direction)
@@ -149,11 +151,12 @@ public class BTetrisGame : MonoBehaviour {
     }
     bool canMoveWall(BTetrisTransform tetrimino, Vector3 direction)
     {
+        var _constants = BGameConstants.getInstance();
         var d = direction.normalized;
         var bound = tetrimino.getBound();
         if (d.x > 0)
         {
-            return bound.right < width-1;
+            return bound.right < _constants.width - 1;
         }
         if (d.x < 0)
         {

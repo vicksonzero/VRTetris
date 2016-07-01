@@ -17,8 +17,10 @@ public class BTetrisGrid : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
-        fieldVisual = new BTetrisTransform[BTetrisGame.height, BTetrisGame.depth, BTetrisGame.width];
+    void Start ()
+    {
+        var _constants = BGameConstants.getInstance();
+        fieldVisual = new BTetrisTransform[_constants.height, _constants.depth, _constants.width];
         constructColumns();
 
     }
@@ -30,8 +32,9 @@ public class BTetrisGrid : MonoBehaviour {
 
     void constructColumns()
     {
+        var _constants = BGameConstants.getInstance();
         bool alt = false;
-        for (int x = 0; x < BTetrisGame.width; x++)
+        for (int x = 0; x < _constants.width; x++)
         {
             alt = !alt;
             for (int z = 0; z < BTetrisGame.depth; z++)
