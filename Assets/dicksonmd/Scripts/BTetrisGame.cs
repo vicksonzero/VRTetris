@@ -8,10 +8,6 @@ public class BTetrisGame : MonoBehaviour {
     public static int height = 14;  // y
     public static int depth = 7;   // z
 
-    public static float cellWidth = 1;  // x
-    public static float cellHeight = 1; // y
-    public static float cellDepth = 1;  // z
-
     public float tickInterval = 1;
 
     [HideInInspector]

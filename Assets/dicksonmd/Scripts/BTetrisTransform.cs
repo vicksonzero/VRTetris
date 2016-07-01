@@ -49,7 +49,7 @@ public class BTetrisTransform : MonoBehaviour {
     public Vector3 toScaledLocalPosition()
     {
         var pos = this.position;
-        return new Vector3(pos.x * BTetrisGame.cellWidth, pos.y * BTetrisGame.cellHeight, pos.z * BTetrisGame.cellDepth);
+        return new Vector3(pos.x, pos.y, pos.z);
     }
 
     public Bound getBound()

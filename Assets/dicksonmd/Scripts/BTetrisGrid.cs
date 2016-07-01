@@ -58,7 +58,7 @@ public class BTetrisGrid : MonoBehaviour {
         {
             fieldVisual[y, z, x] = Object.Instantiate(cubePrefab);
             fieldVisual[y, z, x].transform.SetParent(cubeGroup, false);
-            fieldVisual[y, z, x].transform.localPosition = new Vector3(x * BTetrisGame.cellWidth, y * BTetrisGame.cellHeight, z * BTetrisGame.cellDepth);
+            fieldVisual[y, z, x].transform.localPosition = new Vector3(x, y, z);
         }
         else
         {
