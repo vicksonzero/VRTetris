@@ -32,8 +32,15 @@ public class BUIDragScreen : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        if (Input.GetKey("right"))
+        {
+            rotateWorld(2 * sensitivity);
+        }
+        if (Input.GetKey("left"))
+        {
+            rotateWorld(-2 * sensitivity);
+        }
+    }
 
     void onPointerDown(BaseEventData e)
     {
@@ -65,7 +72,12 @@ public class BUIDragScreen : MonoBehaviour {
         }
 
         var xx = startX - localCursor.x;
-        tetrisGameGroup.Rotate(Vector3.up, xx* sensitivity);
+        rotateWorld(xx * sensitivity);
         startX = localCursor.x;
+    }
+
+    void rotateWorld(float amount)
+    {
+        tetrisGameGroup.Rotate(Vector3.up, amount);
     }
 }

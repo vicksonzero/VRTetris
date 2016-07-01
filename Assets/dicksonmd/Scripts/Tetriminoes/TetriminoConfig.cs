@@ -20,6 +20,16 @@ public abstract class TetriminoConfig
     public const bool _1 = true;
     public const bool _0 = false;
 
+    public enum RotationType
+    {
+        up,
+        down,
+        left,
+        right,
+        forward,
+        back
+    }
+
     public string name;
     public Vector3 center;
     public BrickConfig[] config;

@@ -15,6 +15,7 @@ public class BTetriminoBuilder : MonoBehaviour
     private Transform nextGroup;
 
     static SortedDictionary<string, TetriminoConfig> tetriminoConfigsByName;
+    private static BTetri1DotPool tetri1DotPool;
 
     public static TetriminoConfig[] tetriminoConfigs;
 

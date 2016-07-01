@@ -30,7 +30,7 @@ public class BTetrisGame : MonoBehaviour {
     // Use this for initialization
     void Start () {
         StartCoroutine(tick());
-        this.movingPiece = builder.createRandomBrick(new Vector3(width / 2, height, depth / 2));
+        this.movingPiece = this.getNextBrick();
     }
 	
 	// Update is called once per frame
@@ -78,11 +78,13 @@ public class BTetrisGame : MonoBehaviour {
             if (this.movingPiece)
             {
                 // if reach bottom
-                if (this.movingPiece.position.y + this.movingPiece.most(new Vector3(0, -1, 0))==0)
+                //print(this.movingPiece.position.y);
+                //print(this.movingPiece.most(new Vector3(0, -1, 0)));
+                if (this.movingPiece.position.y - this.movingPiece.most(new Vector3(0, -1, 0))==0)
                 {
                     field.setTetrimino(this.movingPiece, true);
                     Destroy(this.movingPiece.gameObject);
-                    this.movingPiece = builder.createRandomBrick(new Vector3(width / 2, height, depth / 2));
+                    this.movingPiece = getNextBrick();
                 }
                 // if cannot move down
                 else
@@ -91,7 +93,7 @@ public class BTetrisGame : MonoBehaviour {
                     {
                         field.setTetrimino(this.movingPiece, true);
                         Destroy(this.movingPiece.gameObject);
-                        this.movingPiece = builder.createRandomBrick(new Vector3(width / 2, height, depth / 2));
+                        this.movingPiece = getNextBrick();
                     }
                     else {
                         // move freely
@@ -102,6 +104,11 @@ public class BTetrisGame : MonoBehaviour {
             }
             yield return new WaitForSeconds(this.tickInterval);
         }
+    }
+
+    public virtual BTetrisTransform getNextBrick()
+    {
+        return builder.createRandomBrick(new Vector3(width / 2, height, depth / 2));
     }
 
     public void tryMoveMovingPiece(Vector3 direction)
@@ -120,9 +127,20 @@ public class BTetrisGame : MonoBehaviour {
 
         this.movingPiece.move(direction);
 
-        var bound = this.movingPiece.getBound();
+        //var bound = this.movingPiece.getBound();
         //print(bound.ToString());
     }
+
+    public void tryRotateMovingPiece(int rotationVector)
+    {
+        this.movingPiece.rotate(rotationVector);
+    }
+
+    public void tryRotateMovingPiece(TetriminoConfig.RotationType rotationnEnum)
+    {
+        this.movingPiece.rotate((int)rotationnEnum);
+    }
+
     bool canMoveAgainstField(BTetrisTransform tetrimino, Vector3 direction)
     {
         return this.field.collides(

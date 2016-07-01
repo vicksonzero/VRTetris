@@ -34,15 +34,6 @@ public class BTetrisTransform : MonoBehaviour {
         set { _position = value; updateTransform(); }
     }
 
-    private Quaternion _rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-
-    public Quaternion rotation
-    {
-        get { return _rotation; }
-        set { _rotation = value; }
-    }
-
-
     public List<BTetrisTransform> children = new List<BTetrisTransform>();
     public BTetrisTransform parent;
 
@@ -58,8 +49,7 @@ public class BTetrisTransform : MonoBehaviour {
         get { return _shapeID; }
         set { _shapeID = value; this.updateShape(); }
     }
-
-
+    private static BTetri1DotPool tetri1DotPool;
 
     public Vector3 toScaledLocalPosition()
     {
@@ -167,7 +157,18 @@ public class BTetrisTransform : MonoBehaviour {
     public BTetrisTransform rotate(Vector3 rotationVector)
     {
         int index = BTetrisTransform.RotationVectorToInt(rotationVector);
-        int nextConfig = this.tetriminoConfig.config[this._shapeID].nextConfig[index];
+        this.rotate(index);
+        return this;
+    }
+
+    /// <summary>
+    /// rotates this tetrimino 90 degrees to a rotationVector
+    /// </summary>
+    /// <param name="rotationType">direction to rotate. use right hand screw rule. relative to tetriminoGroup [0-5]</param>
+    /// <returns>chainable self</returns>
+    public BTetrisTransform rotate(int rotationType)
+    {
+        int nextConfig = this.tetriminoConfig.config[this._shapeID].nextConfig[rotationType];
         this.setRotation(nextConfig);
         return this;
     }
@@ -185,6 +186,12 @@ public class BTetrisTransform : MonoBehaviour {
 
     public BTetrisTransform updateShape()
     {
+        this.children.ForEach(child =>
+        {
+            tetri1DotPool.DisposeAndPush(child);
+        });
+        this.children.Clear();
+
         var config = this.tetriminoConfig.config[this._shapeID];
         var I = config.config.GetLength(0);
         var J = config.config.GetLength(1);
@@ -198,11 +205,12 @@ public class BTetrisTransform : MonoBehaviour {
                 {
                     if (config.config[i, j, k])
                     {
-                        // TODO: use object pool
-
-                        BTetrisTransform cube_go = MonoBehaviour.Instantiate(cubePrefab.gameObject).GetComponent<BTetrisTransform>();
+                        BTetrisTransform cube_go = tetri1DotPool.Pop();
                         cube_go.transform.SetParent(this.transform, false);
                         cube_go.position = new Vector3(i, j, k) - orig;
+
+                        // HACK: updates rotation here to override remaining value from pool. may have a better implementation?
+                        cube_go.transform.localRotation = this.transform.localRotation;
                         this.children.Add(cube_go);
                         cube_go.parent = this;
                     }
@@ -235,6 +243,25 @@ public class BTetrisTransform : MonoBehaviour {
 
             showBounds = false;
         }
+    }
+
+    void Awake()
+    {
+        tetri1DotPool = GameObject.Find("TetrisPools").GetComponent<BTetri1DotPool>();
+    }
+
+    public void Dispose()
+    {
+        // HACK: only considering 1 level shape and 1 level dots
+
+        // return children
+        this.children.ForEach(child =>
+        {
+            tetri1DotPool.DisposeAndPush(child);
+        });
+        this.children.Clear();
+        this._position = Vector3.zero;
+        this.transform.parent = null;
     }
 
 }
