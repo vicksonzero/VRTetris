@@ -21,7 +21,7 @@ public class BTetrisUI : MonoBehaviour {
     {
         game.tryMoveMovingPiece(new Vector3(1, 0, 0));
     }
-    public void moveFront()
+    public void moveforward()
     {
         game.tryMoveMovingPiece(new Vector3(0, 0, 1));
     }

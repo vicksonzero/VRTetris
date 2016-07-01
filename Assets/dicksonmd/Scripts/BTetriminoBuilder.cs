@@ -14,76 +14,23 @@ public class BTetriminoBuilder : MonoBehaviour
 
     private Transform nextGroup;
 
-    static SortedDictionary<string, BrickConfig> tetriminoConfigsByName;
-    public static BrickConfig[] tetriminoConfigs = new BrickConfig[]
-    {
-        new BrickConfig(
-            "4S",
-            new bool[,,] {
-                { {_1, _1, _0 } },
-                { {_0, _1, _1 } },
-            },
-            new int[] { }
-        ),
-        new BrickConfig(
-            "4T",
-            new bool[,,] {
-                { {_0, _1, _0 } },
-                { {_1, _1, _1 } },
-            },
-            new int[] { }
-        ),
-        new BrickConfig(
-            "4LT",
-            new bool[,,] {
-                {
-                    {_1, _1 },
-                    {_0, _1 },
-                },
-                {
-                    {_0, _1 },
-                    {_0, _0 },
-                },
-            },
-            new int[] { }
-        ),
-        new BrickConfig(
-            "4LS",
-            new bool[,,] {
-                {
-                    {_1, _1 },
-                    {_0, _1 },
-                },
-                {
-                    {_1, _0 },
-                    {_0, _0 },
-                },
-            },
-            new int[] { }
-        ),
-        new BrickConfig(
-            "4LZ",
-            new bool[,,] {
-                {
-                    {_1, _1 },
-                    {_1, _0 },
-                },
-                {
-                    {_0, _1 },
-                    {_0, _0 },
-                },
-            },
-            new int[] { }
-        ),
-    };
+    static SortedDictionary<string, TetriminoConfig> tetriminoConfigsByName;
+
+    public static TetriminoConfig[] tetriminoConfigs;
 
     void Awake()
     {
-        tetriminoConfigsByName = new SortedDictionary<string, BrickConfig>();
+        tetriminoConfigs = new TetriminoConfig[]{
+            new Tetri4LL(),
+            new Tetri4S()
+        };
+        var tetriminoConfigsByName = new SortedDictionary<string, TetriminoConfig>();
         for (int i = 0; i < tetriminoConfigs.Length; i++)
         {
+
             tetriminoConfigsByName.Add(tetriminoConfigs[i].name, tetriminoConfigs[i]);
         }
+        BTetriminoBuilder.tetriminoConfigsByName = tetriminoConfigsByName;
     }
 
     void Start()
@@ -117,34 +64,15 @@ public class BTetriminoBuilder : MonoBehaviour
     /// <param name="cube"></param>
     /// <param name="startPos">starting position</param>
     /// <returns></returns>
-    public BTetrisTransform createBrick(BrickConfig config, BTetrisTransform basePrefab, BTetrisTransform cube, Vector3 startPos)
+    public BTetrisTransform createBrick(TetriminoConfig config, BTetrisTransform basePrefab, BTetrisTransform cube, Vector3 startPos)
     {
         BTetrisTransform result = MonoBehaviour.Instantiate(basePrefab.gameObject).GetComponent<BTetrisTransform>();
-
-        var I = config.config.GetLength(0);
-        var J = config.config.GetLength(1);
-        var K = config.config.GetLength(2);
-        for (int i = 0; i < I; i++)
-        {
-            for (int j = 0; j < J; j++)
-            {
-                for (int k = 0; k < K; k++)
-                {
-                    if (config.config[i, j, k])
-                    {
-                        BTetrisTransform cube_go = MonoBehaviour.Instantiate(cube.gameObject).GetComponent<BTetrisTransform>();
-                        cube_go.transform.SetParent(result.transform, false);
-                        cube_go.position = new Vector3(i, j , k);
-                        result.children.Add(cube_go);
-                        cube_go.parent = result;
-                    }
-
-                }
-            }
-        }
+        result.cubePrefab = this.cubePrefab;
+        result.tetriminoConfig = config;
+        result.setRotation(0);
         result.name = "Tetrimino " + config.name;
         result.transform.SetParent(this.nextGroup, false);
-        result.position = startPos;
+        result.position = startPos - config.center;
 
         this.nextGroup = this.tetriminoGroup;
         return result;
@@ -160,7 +88,7 @@ public class BTetriminoBuilder : MonoBehaviour
     /// <returns></returns>
     public BTetrisTransform createBrick(string brickName, BTetrisTransform basePrefab, BTetrisTransform cube, Vector3 startPos)
     {
-        BrickConfig tetriminoConfig;
+        TetriminoConfig tetriminoConfig;
         tetriminoConfigsByName.TryGetValue(brickName, out tetriminoConfig);
         return createBrick(tetriminoConfig, basePrefab, cube, startPos);
     }
@@ -181,7 +109,7 @@ public class BTetriminoBuilder : MonoBehaviour
     /// <param name="config">Config defined in BTetriminoBuilder.cs</param>
     /// <param name="startPos">starting position</param>
     /// <returns></returns>
-    public BTetrisTransform createBrick(BrickConfig config, Vector3 startPos)
+    public BTetrisTransform createBrick(TetriminoConfig config, Vector3 startPos)
     {
         return createBrick(config, this.basePrefab, this.cubePrefab, startPos);
     }

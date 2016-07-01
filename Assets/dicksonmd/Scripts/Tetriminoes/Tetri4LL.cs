@@ -5,10 +5,12 @@ public class Tetri4LL : TetriminoConfig
 {
 
 
-    public new string name = "4LL";
-    public new Color color = new Color(255, 255, 0);
-    public new Vector3 center = new Vector3(1, 1, 1);
-    public new BrickConfig[] config = {
+    public Tetri4LL()
+    {
+        name = "4LL";
+        color = new Color(255, 255, 0);
+        center = new Vector3(1, 1, 1);
+        config = new BrickConfig[]{
         new BrickConfig(
             "0",
             new bool[,,] {//x-
@@ -34,7 +36,7 @@ public class Tetri4LL : TetriminoConfig
                 3,// down
                 4,// left
                 3,// right
-                4,// front
+                4,// forward
                 1,// back
             }
             ),
@@ -63,7 +65,7 @@ public class Tetri4LL : TetriminoConfig
                 0,// down
                 5,// left
                 2,// right
-                0,// front
+                0,// forward
                 5,// back
             }
             ),
@@ -92,7 +94,7 @@ public class Tetri4LL : TetriminoConfig
                 1,// down
                 1,// left
                 6,// right
-                3,// front
+                3,// forward
                 6,// back
             }
             ),
@@ -121,7 +123,7 @@ public class Tetri4LL : TetriminoConfig
                 2,// down
                 0,// left
                 7,// right
-                7,// front
+                7,// forward
                 2,// back
             }
             ),
@@ -150,7 +152,7 @@ public class Tetri4LL : TetriminoConfig
                 7,// down
                 7,// left
                 0,// right
-                5,// front
+                5,// forward
                 0,// back
             }
             ),
@@ -179,7 +181,7 @@ public class Tetri4LL : TetriminoConfig
                 4,// down
                 6,// left
                 1,// right
-                1,// front
+                1,// forward
                 4,// back
             }
             ),
@@ -208,7 +210,7 @@ public class Tetri4LL : TetriminoConfig
                 5,// down
                 2,// left
                 5,// right
-                2,// front
+                2,// forward
                 7,// back
             }
             ),
@@ -237,9 +239,11 @@ public class Tetri4LL : TetriminoConfig
                 6,// down
                 3,// left
                 4,// right
-                6,// front
+                6,// forward
                 3,// back
             }
             ),
     };
+
+    }
 }

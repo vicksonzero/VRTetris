@@ -49,7 +49,7 @@ public class BUIDragScreen : MonoBehaviour {
         }
 
         startX = localCursor.x;
-        Debug.Log("LocalCursor:" + localCursor);
+        //Debug.Log("LocalCursor:" + localCursor);
     }
 
     void onPointerDrag(BaseEventData e)
@@ -65,7 +65,6 @@ public class BUIDragScreen : MonoBehaviour {
         }
 
         var xx = startX - localCursor.x;
-        Debug.Log(xx);
         tetrisGameGroup.Rotate(Vector3.up, xx* sensitivity);
         startX = localCursor.x;
     }

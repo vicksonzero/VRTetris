@@ -106,16 +106,22 @@ public class BTetrisGame : MonoBehaviour {
 
     public void tryMoveMovingPiece(Vector3 direction)
     {
-        if (canMoveWall(this.movingPiece, direction))
+        if (!canMoveWall(this.movingPiece, direction))
         {
-            if (this.canMoveAgainstField(this.movingPiece, direction))
-            {
-                this.movingPiece.move(direction);
-
-                var bound = this.movingPiece.getBound();
-                //print(bound.ToString());
-            }
+            print("cannot move against wall");
+            print(this.movingPiece.getBound().ToString());
+            return;
         }
+        if (!this.canMoveAgainstField(this.movingPiece, direction))
+        {
+            print("cannot move against field");
+            return;
+        }
+
+        this.movingPiece.move(direction);
+
+        var bound = this.movingPiece.getBound();
+        //print(bound.ToString());
     }
     bool canMoveAgainstField(BTetrisTransform tetrimino, Vector3 direction)
     {
@@ -149,7 +155,7 @@ public class BTetrisGame : MonoBehaviour {
         }
         if (d.z < 0)
         {
-            return bound.front > 0;
+            return bound.forward > 0;
         }
         return true;
     }
