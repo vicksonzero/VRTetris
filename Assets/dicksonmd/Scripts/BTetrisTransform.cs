@@ -13,13 +13,13 @@ public struct Bound
     public override string ToString()
     {
         return "{"
-            + left+", "
-            + right + ", "
-            + up + ", "
-            + down + ", "
-            + front + ", "
-            + back
-            +"}";
+            + "L" + left + ", "
+            + "R" + right + ", "
+            + "U" + up + ", "
+            + "D" + down + ", "
+            + "F" + front + ", "
+            + "B" + back
+            + "}";
     }
 };
 public class BTetrisTransform : MonoBehaviour {

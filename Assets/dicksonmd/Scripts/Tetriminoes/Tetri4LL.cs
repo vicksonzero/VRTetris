@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tetri4S : TetriminoConfig
+public class Tetri4LL : TetriminoConfig
 {
 
 
