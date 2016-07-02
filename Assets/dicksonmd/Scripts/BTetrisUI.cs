@@ -4,8 +4,11 @@ using System.Collections;
 public class BTetrisUI : MonoBehaviour {
 
     public BTetrisGame game;
+    public Transform moveArrowsGroup; 
+    public Transform rotateArrowsGroup; 
+    public Transform syncRotationTransform;
 
-	public void moveUp()
+    public void moveUp()
     {
         //game.tryMoveMovingPiece(new Vector3(0, 1, 0));
     }
@@ -52,6 +55,12 @@ public class BTetrisUI : MonoBehaviour {
     public void rotateBack()
     {
         game.tryRotateMovingPiece(TetriminoConfig.RotationType.back);
+    }
+
+    void Update()
+    {
+        moveArrowsGroup.rotation = Quaternion.AngleAxis(syncRotationTransform.eulerAngles.y, syncRotationTransform.up);
+        rotateArrowsGroup.rotation = Quaternion.AngleAxis(syncRotationTransform.eulerAngles.y, syncRotationTransform.up);
     }
 
 }
