@@ -56,6 +56,12 @@ public class BTetriminoBuilder : MonoBehaviour
         this.nextGroup = gp;
         return this;
     }
+    
+    public TetriminoConfig randomBrickConfig()
+    {
+        var brickID = Random.Range(0, tetriminoConfigs.Length);
+        return tetriminoConfigs[brickID];
+    }
 
     /// <summary>
     /// creates a tetrimino and return its tetrimino behaviour

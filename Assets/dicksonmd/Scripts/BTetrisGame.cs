@@ -1,27 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using System;
 
 public class BTetrisGame : MonoBehaviour {
 
-    public static int width = 6;   // x
-    public static int height = 14;  // y
-    public static int depth = 7;   // z
+    //public static int width = 6;   // x
+    //public static int height = 14;  // y
+    //public static int depth = 7;   // z
 
     public float tickInterval = 1;
 
     [HideInInspector]
     public BTetrisTransform movingPiece;
 
-    private TetrisField field;
+    [HideInInspector]
+    public TetrisField field;
     public BTetriminoBuilder builder;
     public BTetrisGrid tetrisGrid;
 
+    
     // control
     private bool canHori = true;
     private bool canVert = true;
 
-    void Awake()
+    protected virtual void Awake()
     {
         var _constants = BGameConstants.getInstance();
         field = new TetrisField(_constants.width, _constants.depth, _constants.height);
@@ -72,16 +75,17 @@ public class BTetrisGame : MonoBehaviour {
 
     }
 
-    IEnumerator tick()
+    protected virtual IEnumerator tick()
     {
         while (true)
         {
+
             if (this.movingPiece)
             {
                 // if reach bottom
                 //print(this.movingPiece.position.y);
                 //print(this.movingPiece.most(new Vector3(0, -1, 0)));
-                if (this.movingPiece.position.y - this.movingPiece.most(new Vector3(0, -1, 0))==0)
+                if (this.movingPiece.position.y - this.movingPiece.most(new Vector3(0, -1, 0)) == 0)
                 {
                     field.setTetrimino(this.movingPiece, true);
                     Destroy(this.movingPiece.gameObject);
@@ -90,7 +94,7 @@ public class BTetrisGame : MonoBehaviour {
                 // if cannot move down
                 else
                 {
-                    if (!this.canMoveAgainstField(this.movingPiece,new Vector3(0, -1, 0)))
+                    if (!this.canMoveAgainstField(this.movingPiece, new Vector3(0, -1, 0)))
                     {
                         field.setTetrimino(this.movingPiece, true);
                         Destroy(this.movingPiece.gameObject);
@@ -101,16 +105,29 @@ public class BTetrisGame : MonoBehaviour {
                         this.movingPiece.move(new Vector3(0, -1, 0));
                     }
                 }
-                
+
             }
+
+            var fullLevels = this.field.getFullLevels();
+            if (fullLevels.Count > 0)
+            {
+                this.field.clearLines(fullLevels);
+            }
+
             yield return new WaitForSeconds(this.tickInterval);
         }
     }
+    
 
     public virtual BTetrisTransform getNextBrick()
     {
         var _constants = BGameConstants.getInstance();
-        return builder.createRandomBrick(new Vector3(_constants.width / 2, _constants.height, _constants.depth / 2));
+        return builder.createRandomBrick(new Vector3(
+            Mathf.Ceil((1.0f * _constants.width) / 2), 
+            _constants.height,
+            Mathf.Ceil((1.0f * _constants.depth) / 2)
+            )
+        );
     }
 
     public void tryMoveMovingPiece(Vector3 direction)
@@ -118,7 +135,7 @@ public class BTetrisGame : MonoBehaviour {
         if (!canMoveWall(this.movingPiece, direction))
         {
             print("cannot move against wall");
-            print(this.movingPiece.getBound().ToString());
+            //print(this.movingPiece.getBound().ToString());
             return;
         }
         if (!this.canMoveAgainstField(this.movingPiece, direction))
@@ -127,6 +144,7 @@ public class BTetrisGame : MonoBehaviour {
             return;
         }
 
+        // if all is well
         this.movingPiece.move(direction);
 
         //var bound = this.movingPiece.getBound();
@@ -135,12 +153,36 @@ public class BTetrisGame : MonoBehaviour {
 
     public void tryRotateMovingPiece(int rotationVector)
     {
-        this.movingPiece.rotate(rotationVector);
+
+        this.tryRotateMovingPiece((TetriminoConfig.RotationType) rotationVector);
     }
 
     public void tryRotateMovingPiece(TetriminoConfig.RotationType rotationnEnum)
     {
-        this.movingPiece.rotate((int)rotationnEnum);
+        var canRotate = false;
+        Vector3 translation;
+
+        // one-liner that checks for rotation and translation, plus memorizing the translation result
+        if (this.canRotate(this.movingPiece, rotationnEnum, (translation = Vector3.zero))) canRotate = true;
+
+        if (!canRotate && this.canRotate(this.movingPiece, rotationnEnum, (translation = Vector3.left))) canRotate = true;
+        if (!canRotate && this.canRotate(this.movingPiece, rotationnEnum, (translation = Vector3.right))) canRotate = true;
+
+        if (!canRotate && this.canRotate(this.movingPiece, rotationnEnum, (translation = Vector3.forward))) canRotate = true;
+        if (!canRotate && this.canRotate(this.movingPiece, rotationnEnum, (translation = Vector3.back))) canRotate = true;
+
+        //if (!canRotate)
+        //{
+        //    translation = Vector3.zero;
+        //    canRotate = this.canRotate(this.movingPiece, rotationnEnum, translation);
+        //}
+
+        // if all is well
+        if (canRotate)
+        {
+            this.movingPiece.move(translation);
+            this.movingPiece.rotate((int)rotationnEnum);
+        }
     }
 
     bool canMoveAgainstField(BTetrisTransform tetrimino, Vector3 direction)
@@ -164,7 +206,7 @@ public class BTetrisGame : MonoBehaviour {
         }
         if (d.y > 0)
         {
-            return bound.up < height-1;
+            return bound.up < _constants.height - 1;
         }
         if (d.y < 0)
         {
@@ -172,12 +214,22 @@ public class BTetrisGame : MonoBehaviour {
         }
         if (d.z > 0)
         {
-            return bound.back < depth-1;
+            return bound.back < _constants.depth - 1;
         }
         if (d.z < 0)
         {
             return bound.forward > 0;
         }
         return true;
+    }
+
+    bool canRotate(BTetrisTransform tetrimino, TetriminoConfig.RotationType rotationType, Vector3 translation)
+    {
+        //if(tetrimino)
+        var points = tetrimino.toCoordArray(translation,rotationType);
+
+        return (
+            points.All(point => this.field.pointInField(point)) &&
+            !this.field.collides(points));
     }
 }

@@ -67,7 +67,6 @@ public class BTetrisTransform : MonoBehaviour {
             bound.up = Mathf.Max(bound.up, (int)child.position.y);
             bound.down = Mathf.Min(bound.down, (int)child.position.y);
             bound.forward = Mathf.Min(bound.forward, (int)child.position.z);
-            print(child.position);
             bound.back = Mathf.Max(bound.back, (int)child.position.z);
         }
         bound.left += (int)this.position.x;
@@ -81,23 +80,23 @@ public class BTetrisTransform : MonoBehaviour {
 
     public List<Vector3> toCoordArray()
     {
-        var result = new List<Vector3>();
-        if (children.Count > 0)
+        
+        return this.toCoordArray(Vector3.zero, TetriminoConfig.RotationType.none);
+    }
+
+    public List<Vector3> toCoordArray(Vector3 translation, TetriminoConfig.RotationType rotationType)
+    {
+        var shapeID = (rotationType == TetriminoConfig.RotationType.none ?
+            this._shapeID :
+            this.tetriminoConfig.config[this._shapeID].nextConfig[(int)rotationType]);
+
+        var points = this.tetriminoConfig.toPoints(shapeID);
+        
+        var result = points.Select(point =>
         {
-            children.ForEach(child =>
-            {
-                var childResult = child.toCoordArray();
-                childResult = childResult.Select(res =>
-                {
-                    return res + this.position;
-                }).ToList();
-                result.AddRange(childResult);
-            });
+            return point + translation + position;
         }
-        else
-        {
-            result.Add(this.position - this.tetriminoConfig.center);
-        }
+        ).ToList();
         return result;
     }
 
@@ -192,33 +191,22 @@ public class BTetrisTransform : MonoBehaviour {
         });
         this.children.Clear();
 
-        var config = this.tetriminoConfig.config[this._shapeID];
-        var I = config.config.GetLength(0);
-        var J = config.config.GetLength(1);
-        var K = config.config.GetLength(2);
-        var orig = this.tetriminoConfig.center;
-        for (int i = 0; i < I; i++)
+        var points = this.tetriminoConfig.toPoints(this._shapeID);
+        points.ForEach(point =>
         {
-            for (int j = 0; j < J; j++)
-            {
-                for (int k = 0; k < K; k++)
-                {
-                    if (config.config[i, j, k])
-                    {
-                        BTetrisTransform cube_go = tetri1DotPool.Pop();
-                        cube_go.transform.SetParent(this.transform, false);
-                        cube_go.position = new Vector3(i, j, k) - orig;
+            BTetrisTransform cube_go = tetri1DotPool.Pop();
+            cube_go.transform.SetParent(this.transform, false);
+            cube_go.position = point;
 
-                        // HACK: updates rotation here to override remaining value from pool. may have a better implementation?
-                        cube_go.transform.localRotation = this.transform.localRotation;
-                        this.children.Add(cube_go);
-                        cube_go.parent = this;
-                    }
-                }
-            }
-        }
+            // HACK: updates rotation here to override remaining value from pool. may have a better implementation?
+            cube_go.transform.localRotation = this.transform.localRotation;
+            cube_go.transform.localScale = Vector3.one;
+            this.children.Add(cube_go);
+            cube_go.parent = this;
+        });
         return this;
     }
+
     static int RotationVectorToInt(Vector3 rot)
     {
         if (rot.normalized == Vector3.up) return 0;

@@ -37,9 +37,9 @@ public class BTetrisGrid : MonoBehaviour {
         for (int x = 0; x < _constants.width; x++)
         {
             alt = !alt;
-            for (int z = 0; z < BTetrisGame.depth; z++)
+            for (int z = 0; z < _constants.depth; z++)
             {
-                constructColumn(x, z, BTetrisGame.height, (alt? columnAltPrefab : columnPrefab));
+                constructColumn(x, z, _constants.height, (alt? columnAltPrefab : columnPrefab));
                 alt = !alt;
             }
         }

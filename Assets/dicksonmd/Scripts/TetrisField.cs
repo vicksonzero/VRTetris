@@ -77,6 +77,19 @@ public class TetrisField {
         return true;
     }
 
+    public List<int> getFullLevels()
+    {
+        List<int> result = new List<int>();
+        for (int j = 0; j < this.height; j++)
+        {
+            if (this.levelIsFull(j))
+            {
+                result.Add(j);
+            }
+        }
+        return result;
+    }
+
     /// <summary>
     /// clear the line y, delete all the blocks and set this layer to zero
     /// </summary>
@@ -91,6 +104,16 @@ public class TetrisField {
                 setBit(x, y, z, false);
             }
         }
+    }
+
+    public void clearLines(List<int> lines)
+    {
+        lines.Sort((i1, i2) => i2.CompareTo(i1));
+        lines.ForEach((line) =>
+        {
+            this.clearLine(line);
+            dropLinesAbove(line);
+        });
     }
 
     /// <summary>
@@ -129,5 +152,13 @@ public class TetrisField {
                 return getBit((int)point.x, (int)point.y, (int)point.z);
             }
             );
+    }
+    public bool pointInField(Vector3 point)
+    {
+        return (
+            point.x >= 0 && point.x < this.width &&
+            point.y >= 0 && point.y < this.height &&
+            point.z >= 0 && point.z < this.depth &&
+            true);
     }
 }
