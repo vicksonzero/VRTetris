@@ -6,10 +6,11 @@ using System;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
-public class BTitle : MonoBehaviour, IPointerClickHandler
+public class BTitle : MonoBehaviour
 {
     public string nextSceneName;
     public Text titleLabel;
+    public Text titleLabel2;
     public Text buildNumberLabel;
     public RectTransform[] panels;
 
@@ -17,6 +18,7 @@ public class BTitle : MonoBehaviour, IPointerClickHandler
     void Start () {
         var _constant = BGameConstants.getInstance();
         titleLabel.text = _constant.gameName + " " + _constant.versionName;
+        titleLabel2.text = _constant.gameName + " " + _constant.versionName;
         buildNumberLabel.text = "Build " + _constant.buildNumber.ToString("0000");
         this.panels.ToList().ForEach((panel) =>
         {
@@ -29,7 +31,7 @@ public class BTitle : MonoBehaviour, IPointerClickHandler
 	
 	}
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void startGame()
     {
         SceneManager.LoadScene(nextSceneName);
     }

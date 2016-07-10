@@ -33,6 +33,8 @@ public class BTetrisGame : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        var _constants = BGameConstants.getInstance();
+        this.tickInterval = _constants.startSpeed;
         StartCoroutine(tick());
         this.movingPiece = this.getNextBrick();
     }

@@ -47,4 +47,37 @@ public class BGameConstants : MonoBehaviour {
         //Sets this to not be destroyed when reloading scene
         DontDestroyOnLoad(gameObject);
     }
+
+    public void setStartSpeed(float val)
+    {
+        this.startSpeed = val;
+    }
+    public void setGameScale(float val)
+    {
+        this.gameScale = val;
+    }
+    public void setDebugOrientation(bool val)
+    {
+        this.debugOrientation = val;
+    }
+    public void setDropButtonPosition(DropButtonPositions val)
+    {
+        this.dropButtonPosition = val;
+    }
+    public void setLongPressHardDrop(bool val)
+    {
+        this.longPressHardDrop = val;
+    }
+    public void setGhostBlock(bool val)
+    {
+        this.ghostBlock = val;
+    }
+    public void setDragCamera(bool val)
+    {
+        this.dragCamera = val;
+    }
+    public void setSmoothARCard(bool val)
+    {
+        this.smoothARCard = val;
+    }
 }
