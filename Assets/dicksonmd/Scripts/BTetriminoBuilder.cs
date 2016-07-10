@@ -23,7 +23,10 @@ public class BTetriminoBuilder : MonoBehaviour
     {
         tetriminoConfigs = new TetriminoConfig[]{
             new Tetri4LL(),
-            new Tetri4S()
+            new Tetri4S(),
+            new Tetri4I(),
+            new Tetri8OO(),
+            new Tetri4T()
         };
         var tetriminoConfigsByName = new SortedDictionary<string, TetriminoConfig>();
         for (int i = 0; i < tetriminoConfigs.Length; i++)
@@ -48,10 +51,10 @@ public class BTetriminoBuilder : MonoBehaviour
 
     public BTetriminoBuilder asDebug()
     {
-        return this.toGroup(debugGroup);
+        return this.forGroup(debugGroup);
     }
 
-    public BTetriminoBuilder toGroup(Transform gp)
+    public BTetriminoBuilder forGroup(Transform gp)
     {
         this.nextGroup = gp;
         return this;

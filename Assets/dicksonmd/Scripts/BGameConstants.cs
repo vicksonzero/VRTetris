@@ -6,13 +6,24 @@ public class BGameConstants : MonoBehaviour {
 
     [Header("Version")]
     public string gameName = "VRTetris";
-    public string versionName = "v0_4";
-    public int buildNumber = 4;
+    public string versionName = "v0.8";
+    public int buildNumber = 10;
 
     [Header("game size")]
-    public int width = 6;   // x
+    public int width = 5;   // x
     public int height = 14;  // y
-    public int depth = 7;   // z
+    public int depth = 5;   // z
+
+    [Header("Game Settings")]
+    public float startSpeed = 1.5f;
+    public float gameScale = 1f;
+    public bool debugOrientation = false;
+    public enum DropButtonPositions { ceil , floor, screenRight, screenLeft};
+    public DropButtonPositions dropButtonPosition = DropButtonPositions.ceil;
+    public bool longPressHardDrop = true;
+    public bool ghostBlock = true;
+    public bool dragCamera = false;
+    public bool smoothARCard = false;
 
     static BGameConstants instance = null;
     public static BGameConstants getInstance()

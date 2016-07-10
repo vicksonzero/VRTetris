@@ -10,6 +10,8 @@ public class BTetrisGameTitle: BTetrisGame {
     [Tooltip("In seconds")]
     public float changeBGInterval = 30;
 
+    private string prevName = "";
+
     protected override void Awake() { }
     protected override IEnumerator tick()
     {
@@ -24,7 +26,14 @@ public class BTetrisGameTitle: BTetrisGame {
 
     public override BTetrisTransform getNextBrick()
     {
-        var randomBrick = builder.randomBrickConfig();
-        return builder.toGroup(backgroundTetriminoGroup).createBrick(randomBrick, new Vector3(0,0,0) + randomBrick.center);
+        TetriminoConfig randomBrick;
+        do
+        {
+            randomBrick = builder.randomBrickConfig();
+
+        } while (randomBrick.name == prevName);
+        print(randomBrick.name);
+        prevName = randomBrick.name;
+        return builder.forGroup(backgroundTetriminoGroup).createBrick(randomBrick, new Vector3(0,0,0) + randomBrick.center);
     }
 }
