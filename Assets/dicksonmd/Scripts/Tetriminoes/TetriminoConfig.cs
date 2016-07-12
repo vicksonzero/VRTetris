@@ -37,6 +37,15 @@ public abstract class TetriminoConfig
     public BrickConfig[] config;
     public Color color;
 
+    public Material mySkin;
+
+    public virtual TetriminoConfig initMaterial(Material baseMaterial)
+    {
+        this.mySkin = new Material(baseMaterial);
+        this.mySkin.color = this.color;
+        return this;
+    }
+
     public List<Vector3> toPoints(int shapeID)
     {
         var result = new List<Vector3>();

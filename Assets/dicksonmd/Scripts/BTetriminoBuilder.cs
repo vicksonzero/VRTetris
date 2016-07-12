@@ -9,6 +9,7 @@ public class BTetriminoBuilder : MonoBehaviour
     const bool _0 = false;
     public BTetrisTransform cubePrefab;
     public BTetrisTransform basePrefab;
+    public Material baseMaterial;
     public Transform tetriminoGroup;
     public Transform debugGroup;
 
@@ -22,11 +23,11 @@ public class BTetriminoBuilder : MonoBehaviour
     void Awake()
     {
         tetriminoConfigs = new TetriminoConfig[]{
-            new Tetri4LL(),
-            new Tetri4S(),
-            new Tetri4I(),
-            new Tetri8OO(),
-            new Tetri4T()
+            new Tetri4LL().initMaterial(baseMaterial),
+            new Tetri4S().initMaterial(baseMaterial),
+            new Tetri4I().initMaterial(baseMaterial),
+            new Tetri8OO().initMaterial(baseMaterial),
+            new Tetri4T().initMaterial(baseMaterial)
         };
         var tetriminoConfigsByName = new SortedDictionary<string, TetriminoConfig>();
         for (int i = 0; i < tetriminoConfigs.Length; i++)

@@ -8,7 +8,7 @@ public class Tetri4T : TetriminoConfig
     public Tetri4T()
     {
         name = "4T";
-        color = new Color(255, 255, 0);
+        color = new Color(255.0f / 255, 192.0f / 255, 0.0f / 255, 1);
         center = new Vector3(1, 1, 1);
         config = new BrickConfig[]{
         new BrickConfig(
@@ -322,10 +322,10 @@ public class Tetri4T : TetriminoConfig
             },
             new int[] // next
             {
-                8,// up
-                9,// down
-                3,// left
-                3,// right
+                9,// up
+                8,// down
+                2,// left
+                2,// right
                 4,// forward
                 5,// back
             }

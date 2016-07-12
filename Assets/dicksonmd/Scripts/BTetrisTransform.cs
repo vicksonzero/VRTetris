@@ -201,6 +201,7 @@ public class BTetrisTransform : MonoBehaviour {
             // HACK: updates rotation here to override remaining value from pool. may have a better implementation?
             cube_go.transform.localRotation = this.transform.localRotation;
             cube_go.transform.localScale = Vector3.one;
+            cube_go.GetComponent<Renderer>().material = this.tetriminoConfig.mySkin;
             this.children.Add(cube_go);
             cube_go.parent = this;
         });

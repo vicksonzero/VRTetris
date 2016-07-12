@@ -30,7 +30,7 @@ public class BSlideInOut : MonoBehaviour {
     {
         if(this.animType != AnimTypes.STOP)
         {
-            var progressPercent = (Time.time - this.animStartTime) / this.animStartTime;
+            var progressPercent = (Time.time - this.animStartTime) / this.animTime;
             this.rt.localPosition = Vector3.Lerp(this.rt.localPosition, this.destPosition, progressPercent);
 
             if(progressPercent>=1.0f)
@@ -44,18 +44,18 @@ public class BSlideInOut : MonoBehaviour {
     public void slideOut(float time)
     {
         this.animTime = time;
+        this.animStartTime = Time.time;
         this.animType = AnimTypes.OUT;
         this.destPosition = this.outPosition;
-        this.animStartTime = Time.time;
     }
 
     public void slideIn(float time)
     {
         this.gameObject.SetActive(true);
         this.animTime = time;
-        this.animType = AnimTypes.OUT;
-        this.rt.localPosition = this.inPosition;
-        this.destPosition = this.startPosition;
         this.animStartTime = Time.time;
+        this.rt.localPosition = this.inPosition;
+        this.animType = AnimTypes.OUT;
+        this.destPosition = this.startPosition;
     }
 }

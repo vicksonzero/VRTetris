@@ -60,6 +60,7 @@ public class BTetrisGrid : MonoBehaviour {
         if (val)
         {
             fieldVisual[y, z, x] = Object.Instantiate(cubePrefab);
+            //fieldVisual[y, z, x].GetComponent<Renderer>().material = skin;
             fieldVisual[y, z, x].transform.SetParent(cubeGroup, false);
             fieldVisual[y, z, x].transform.localPosition = new Vector3(x, y, z);
         }

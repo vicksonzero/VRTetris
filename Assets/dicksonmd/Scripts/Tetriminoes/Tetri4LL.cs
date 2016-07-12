@@ -8,7 +8,7 @@ public class Tetri4LL : TetriminoConfig
     public Tetri4LL()
     {
         name = "4LL";
-        color = new Color(255, 255, 0);
+        color = new Color(255.0f / 255, 128.0f / 255, 0.0f / 255, 1);
         center = new Vector3(1, 1, 1);
         config = new BrickConfig[]{
         new BrickConfig(
